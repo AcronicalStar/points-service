@@ -15,7 +15,6 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("Starting up Points Service...");
-        System.setProperty("server.servlet.context-path", "/");
         SpringApplication.run(Main.class, args);
         logger.info("Started Points Service.");
     }

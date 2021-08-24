@@ -13,7 +13,7 @@ import java.util.*;
 @RestController
 public class TransactionController {
 
-    private static final List<Transaction> transactions = new ArrayList<>();
+//    private static final List<Transaction> transactions = new ArrayList<>();
     private final PointsManager pointsManager = new PointsManager();
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
@@ -28,18 +28,18 @@ public class TransactionController {
         if (!transaction.valid()) {
             throw new IllegalArgumentException("Invalid transaction");
         }
-        transactions.add(transaction);
+        pointsManager.addTransaction(transaction);
     }
 
     @PostMapping(value = "/spendPoints")
     public List<PointsAfterSpending> spendPoints(@RequestBody Points points) {
         logger.info("Spent points: {}", points);
-        return pointsManager.spendPoints(points.getPoints(), transactions);
+        return pointsManager.spendPoints(points.getPoints());
     }
 
     @GetMapping(value = "/getBalance")
     public Map<String, Integer> getBalance() {
         logger.info("Getting balance.");
-        return pointsManager.getPayersPointBalance(transactions);
+        return pointsManager.getPayersPointBalance();
     }
 }
