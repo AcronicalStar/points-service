@@ -76,18 +76,41 @@ A subsequent call to the points balance route, after the spend, should returns t
   6) Maven
 
 # Setup
-* Install Java 
-* Install Maven 
-  * For Windows: Download maven and extract it in a location of your choice. Set the M2_HOME and MAVEN_HOME variable to maven installation folder. Update the PATH variable with 'Maven-installation/bin' directory. 
-  * For Mac: Download maven and extract it to your target location. Open the terminal and type nano ~/.bashrc. Add these lines to the file:
-    * export M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
-    * export M2=$M2_HOME/bin
-    * export MAVEN_OPTS=-Xms256m -Xmx512m
-    * export PATH=$M2:$PATH 
-  Save the file and relode the environment configuration with command source ~/.bashrc.
-  * For Ubuntu: In the terminal type either sudo apt-get install mvn or sudo apt-get install maven
-  * Verify maven in console by typing mvn -version.
-  *  
+* git clone https://github.com/monicasuresh45/points-service.git
+* Open up a shell of your choice
+* Install maven: this link has clear instructions for each OS - https://maven.apache.org/install.html
+* Make sure to have maven in your path: Type mvn -v
+* Build and install the project jar. At the command prompt, type: mvn install
+* Make sure that you have the artifact in the target folder: Type ls target and you should see rest-service-initial-0.0.1-SNAPSHOT.jar
+* Start up the server:  Type. java  -jar target/rest-service-initial-0.0.1-SNAPSHOT.jar
+* Install postman
+* Start postman, skip the signing in part.
+* Create collection
+* Add request
+* Label your request so you. can save it for more requests
+* Test all the api's, just as supplied in the exercise
+  
+To add a new transaction
+Select POST for method type
+type in http://localhost:8080/add
+select JSON for data. type
+In the body type: { "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
+Click send
+Additional data
+{ "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
+{ "payer": "UNILEVER", "points": 200, "timestamp": "2020-10-31T11:00:00Z" }
+{ "payer": "DANNON", "points": -200, "timestamp": "2020-10-31T15:00:00Z" }
+{ "payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z" }
+{ "payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z" }
+
+To spend points
+Select POST for method type
+type in http://localhost:8080/spendPoints for. URL
+select JSON. for data type
+In the body type. { "points": 5000 }
+To get balance
+Select GET for method type
+type http://localhost:8080/getBalance
 
 # Features
 * Main
