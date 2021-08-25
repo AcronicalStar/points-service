@@ -1,5 +1,3 @@
-![Screen Shot 2021-08-25 at 7 30 44 PM](https://user-images.githubusercontent.com/78180667/130877514-74ed3d26-4312-4817-93d5-ca2ecfde4afb.png)
-![Screen Shot 2021-08-25 at 7 30 44 PM](https://user-images.githubusercontent.com/78180667/130877522-4c6e01b7-0df3-4cc3-aebb-57cc19539798.png)
 # Points Service
 
 # General Info 
