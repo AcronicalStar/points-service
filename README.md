@@ -84,6 +84,7 @@ A subsequent call to the points balance route, after the spend, should returns t
     * export M2=$M2_HOME/bin
     * export MAVEN_OPTS=-Xms256m -Xmx512m
     * export PATH=$M2:$PATH 
+  Save the file and relode the environment configuration with command source ~/.bashrc.
   * For Ubuntu: In the terminal type either sudo apt-get install mvn or sudo apt-get install maven
   * Verify maven in console by typing mvn -version.
   *  
