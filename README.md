@@ -1,4 +1,4 @@
-eri# Points Service
+# Points Service
 
 # General Info 
 This is a Points web service that accepts HTTP requests and returns responses. This web service provides routes that allow users to: 
@@ -76,10 +76,17 @@ A subsequent call to the points balance route, after the spend, should returns t
   6) Maven
 
 # Setup
+  1) Install Java 
   1) Install Maven 
-    * For Windows: Download maven and extract it in a location of your choice. Set the M2_HOME and MAVEN_HOME variable to maven installation folder. Update the PATH variable with 'Maven-installation/bin' directory. Verify maven in console by typing mvn -version.
-    * For Mac: 
+    * For Windows: Download maven and extract it in a location of your choice. Set the M2_HOME and MAVEN_HOME variable to maven installation folder. Update the PATH variable with 'Maven-installation/bin' directory. 
+    * For Mac: Download maven and extract it to your target location. Open the terminal and type nano ~/.bashrc. Add these lines to the file:
+   export M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
+   export M2=$M2_HOME/bin
+   export MAVEN_OPTS=-Xms256m -Xmx512m
+   export PATH=$M2:$PATH 
     * For Ubuntu: In the terminal type either sudo apt-get install mvn or sudo apt-get install maven
+  2) Verify maven in console by typing mvn -version.
+  3) 
 
 # Features
 * Main
