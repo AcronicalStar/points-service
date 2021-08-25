@@ -12,37 +12,43 @@ points per payer/partner. In our system, each transaction record contains: payer
 For earning points it is easy to assign a payer, we know which actions earned the points. And thus which partner should be paying for the points.
 When a user spends points, they don't know or care which payer the points come from. But, our accounting team does care how the points are
 spent. There are two rules for determining what points to "spend" first:
-● We want the oldest points to be spent first (oldest based on transaction timestamp, not the order they’re received)
-● We want no payer's points to go negative.
-We expect your web service to
+  
+* We want the oldest points to be spent first (oldest based on transaction timestamp, not the order they’re received)
+* We want no payer's points to go negative.
+  
+The web service must
 Provide routes that:
-● Add transactions for a specific payer and date.
-● Spend points using the rules above and return a list of { "payer": <string>, "points": <integer> } for each call.
-● Return all payer point balances.
-Note:
-● We are not defining specific requests/responses. Defining these is part of the exercise.
-● We don’t expect you to use any durable data store. Storing transactions in memory is acceptable for the exercise.
+* Add transactions for a specific payer and date.
+* Spend points using the rules above and return a list of { "payer": <string>, "points": <integer> } for each call.
+* Return all payer point balances.
+  
 Example
 Suppose you call your add transaction route with the following sequence of calls:
-● { "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
-● { "payer": "UNILEVER", "points": 200, "timestamp": "2020-10-31T11:00:00Z" }
-● { "payer": "DANNON", "points": -200, "timestamp": "2020-10-31T15:00:00Z" }
-● { "payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z" }
-● { "payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z" }
+* { "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
+* { "payer": "UNILEVER", "points": 200, "timestamp": "2020-10-31T11:00:00Z" }
+* { "payer": "DANNON", "points": -200, "timestamp": "2020-10-31T15:00:00Z" }
+* { "payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z" }
+* { "payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z" }
+  
 Then you call your spend points route with the following request:
 { "points": 5000 }
+  
 The expected response from the spend call would be:
+  
 [
 { "payer": "DANNON", "points": -100 },
 { "payer": "UNILEVER", "points": -200 },
 { "payer": "MILLER COORS", "points": -4,700 }
 ]
+  
 A subsequent call to the points balance route, after the spend, should returns the following results:
+  
 {
 "DANNON": 1000,
 "UNILEVER": 0,
 "MILLER COORS": 5300
 }
+  
 # Screenshots 
 
 ![Zip Archiver](https://user-images.githubusercontent.com/49923044/124396802-d08f5380-dcd9-11eb-808d-db34fbcc4023.jpg)
