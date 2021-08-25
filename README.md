@@ -1,3 +1,5 @@
+![Screen Shot 2021-08-25 at 7 30 44 PM](https://user-images.githubusercontent.com/78180667/130877514-74ed3d26-4312-4817-93d5-ca2ecfde4afb.png)
+![Screen Shot 2021-08-25 at 7 30 44 PM](https://user-images.githubusercontent.com/78180667/130877522-4c6e01b7-0df3-4cc3-aebb-57cc19539798.png)
 # Points Service
 
 # General Info 
@@ -51,7 +53,15 @@ A subsequent call to the points balance route, after the spend, should returns t
   
 # Screenshots 
 
+  ![Screen Shot 2021-08-25 at 7 30 44 PM](https://user-images.githubusercontent.com/78180667/130877541-bfcc6173-3c06-4f73-8623-5485f29b3f68.png)
   
+  ![Screen Shot 2021-08-25 at 7 33 28 PM](https://user-images.githubusercontent.com/78180667/130877860-108cb983-14e7-42d3-a32e-e58c89bfe51e.png)
+
+  ![Screen Shot 2021-08-25 at 7 34 32 PM](https://user-images.githubusercontent.com/78180667/130877866-e742742e-53f8-4903-82b3-9720303cf03f.png)
+
+  ![Screen Shot 2021-08-25 at 7 35 26 PM](https://user-images.githubusercontent.com/78180667/130877877-9ca9bf26-b967-40bd-84e0-ac2a2d121c25.png)
+
+  ![Screen Shot 2021-08-25 at 7 35 43 PM](https://user-images.githubusercontent.com/78180667/130877880-5f44ba2f-8067-4d92-89e7-a53843df0c0f.png)
 
 # Technologies
   1) Java programming language
