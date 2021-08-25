@@ -4,11 +4,9 @@ import main.java.PointsAfterSpending;
 import main.java.PointsManager;
 import main.java.Transaction;
 import org.hamcrest.collection.IsMapContaining;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.assertThrows;
 
 import java.time.Instant;
 import java.util.*;
@@ -16,6 +14,7 @@ import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 class PointsManagerTest {
@@ -34,11 +33,11 @@ class PointsManagerTest {
         Instant instant4 = Instant.parse("2020-11-01T14:00:00Z");
         Instant instant5 = Instant.parse("2020-10-31T10:00:00Z");
 
-        Transaction transaction = new Transaction(DANNON, 1000, instant);
+        Transaction transaction5 = new Transaction(DANNON, 300, instant5);
         Transaction transaction2 = new Transaction(UNILEVER, 200, instant2);
         Transaction transaction3 = new Transaction(DANNON, -200, instant3);
         Transaction transaction4 = new Transaction(MILLER_COORS, 10000, instant4);
-        Transaction transaction5 = new Transaction(DANNON, 300, instant5);
+        Transaction transaction = new Transaction(DANNON, 1000, instant);
 
         pointsManager.addTransaction(transaction);
         pointsManager.addTransaction(transaction2);
@@ -63,6 +62,47 @@ class PointsManagerTest {
         expectedPoints.add(new PointsAfterSpending(UNILEVER, -200));
         expectedPoints.add(new PointsAfterSpending(MILLER_COORS, -4700));
         List<PointsAfterSpending> actualPointsList = pointsManager.spendPoints(points);
+        assertThat(actualPointsList, contains(expectedPoints.toArray()));
+    }
+
+    @Test
+    void addDuplicateTransaction() {
+        Instant instant2 = Instant.parse("2020-10-31T11:00:00Z");
+        Transaction transaction2 = new Transaction(UNILEVER, 200, instant2);
+        assertThat(pointsManager.getTransactions().size(), is(5));
+        pointsManager.addTransaction(transaction2);
+        assertThat(pointsManager.getTransactions().size(), is(6));
+    }
+
+    @Test
+    void spend200Points_ensureDannonIsNotSpent() {
+        pointsManager.getTransactions().clear();
+
+        Instant instant = Instant.parse("2020-11-02T14:00:00Z");
+        Instant instant2 = Instant.parse("2020-10-31T11:00:00Z");
+        Instant instant3 = Instant.parse("2020-10-31T15:00:00Z");
+        Instant instant4 = Instant.parse("2020-11-01T14:00:00Z");
+        Instant instant5 = Instant.parse("2020-10-31T10:00:00Z");
+
+
+        Transaction transaction5 = new Transaction(DANNON, 200, instant5);
+        Transaction transaction2 = new Transaction(UNILEVER, 200, instant2);
+        Transaction transaction3 = new Transaction(DANNON, -200, instant3);
+        Transaction transaction4 = new Transaction(MILLER_COORS, 10000, instant4);
+        Transaction transaction = new Transaction(DANNON, 1000, instant);
+
+        pointsManager.addTransaction(transaction);
+        pointsManager.addTransaction(transaction2);
+        pointsManager.addTransaction(transaction3);
+        pointsManager.addTransaction(transaction4);
+        pointsManager.addTransaction(transaction5);
+
+        // prepare expected data
+        List<PointsAfterSpending> expectedPoints = new ArrayList<>();
+
+        expectedPoints.add(new PointsAfterSpending(DANNON, 0));
+        expectedPoints.add(new PointsAfterSpending(UNILEVER, -200));
+        List<PointsAfterSpending> actualPointsList = pointsManager.spendPoints(200);
         assertThat(actualPointsList, contains(expectedPoints.toArray()));
     }
 
@@ -114,6 +154,132 @@ class PointsManagerTest {
     }
 
     @Test
+    public void spend100_Dannon200_Unilever300_DannonNeg100_Miller10000_Dannon300() {
+        pointsManager.getTransactions().clear();
+
+        Instant instant1 = Instant.parse("2020-10-31T10:00:00Z");
+        Instant instant2 = Instant.parse("2020-10-31T11:00:00Z");
+        Instant instant3 = Instant.parse("2020-10-31T15:00:00Z");
+        Instant instant4 = Instant.parse("2020-11-01T14:00:00Z");
+        Instant instant5 = Instant.parse("2020-11-02T14:00:00Z");
+
+        Transaction transaction1 = new Transaction(DANNON, 200, instant1);
+        Transaction transaction2 = new Transaction(UNILEVER, 300, instant2);
+        Transaction transaction3 = new Transaction(DANNON, -100, instant3);
+        Transaction transaction4 = new Transaction(MILLER_COORS, 10000, instant4);
+        Transaction transaction5 = new Transaction(DANNON, 300, instant5);
+
+        pointsManager.addTransaction(transaction1);
+        pointsManager.addTransaction(transaction2);
+        pointsManager.addTransaction(transaction3);
+        pointsManager.addTransaction(transaction4);
+        pointsManager.addTransaction(transaction5);
+
+        // prepare expected data
+        List<PointsAfterSpending> expectedPoints = new ArrayList<>();
+
+        expectedPoints.add(new PointsAfterSpending(DANNON, -100));
+        List<PointsAfterSpending> actualPointsList = pointsManager.spendPoints(100);
+        assertThat(actualPointsList, contains(expectedPoints.toArray()));
+    }
+
+    @Test
+    public void spend500_Dannon200_Unilever300_DannonNeg100_Miller10000_Dannon300() {
+        pointsManager.getTransactions().clear();
+
+        Instant instant1 = Instant.parse("2020-10-31T10:00:00Z");
+        Instant instant2 = Instant.parse("2020-10-31T11:00:00Z");
+        Instant instant3 = Instant.parse("2020-10-31T15:00:00Z");
+        Instant instant4 = Instant.parse("2020-11-01T14:00:00Z");
+        Instant instant5 = Instant.parse("2020-11-02T14:00:00Z");
+
+        Transaction transaction1 = new Transaction(DANNON, 200, instant1);
+        Transaction transaction2 = new Transaction(UNILEVER, 300, instant2);
+        Transaction transaction3 = new Transaction(DANNON, -100, instant3);
+        Transaction transaction4 = new Transaction(MILLER_COORS, 10000, instant4);
+        Transaction transaction5 = new Transaction(DANNON, 300, instant5);
+
+        pointsManager.addTransaction(transaction1);
+        pointsManager.addTransaction(transaction2);
+        pointsManager.addTransaction(transaction3);
+        pointsManager.addTransaction(transaction4);
+        pointsManager.addTransaction(transaction5);
+
+        // prepare expected data
+        List<PointsAfterSpending> expectedPoints = new ArrayList<>();
+
+        expectedPoints.add(new PointsAfterSpending(DANNON, -100));
+        expectedPoints.add(new PointsAfterSpending(UNILEVER, -300));
+        expectedPoints.add(new PointsAfterSpending(MILLER_COORS, -100));
+
+        List<PointsAfterSpending> actualPointsList = pointsManager.spendPoints(500);
+        assertThat(actualPointsList, contains(expectedPoints.toArray()));
+    }
+
+    @Test
+    public void spend500_andagain_Dannon200_Unilever300_DannonNeg100_Miller10000_Dannon300() {
+        pointsManager.getTransactions().clear();
+
+        Instant instant1 = Instant.parse("2020-10-31T10:00:00Z");
+        Instant instant2 = Instant.parse("2020-10-31T11:00:00Z");
+        Instant instant3 = Instant.parse("2020-10-31T15:00:00Z");
+        Instant instant4 = Instant.parse("2020-11-01T14:00:00Z");
+        Instant instant5 = Instant.parse("2020-11-02T14:00:00Z");
+
+        Transaction transaction1 = new Transaction(DANNON, 200, instant1);
+        Transaction transaction2 = new Transaction(UNILEVER, 300, instant2);
+        Transaction transaction3 = new Transaction(DANNON, -100, instant3);
+        Transaction transaction4 = new Transaction(MILLER_COORS, 10000, instant4);
+        Transaction transaction5 = new Transaction(DANNON, 300, instant5);
+
+        pointsManager.addTransaction(transaction1);
+        pointsManager.addTransaction(transaction2);
+        pointsManager.addTransaction(transaction3);
+        pointsManager.addTransaction(transaction4);
+        pointsManager.addTransaction(transaction5);
+
+        // prepare expected data
+        List<PointsAfterSpending> expectedPoints = new ArrayList<>();
+
+        expectedPoints.add(new PointsAfterSpending(DANNON, -100));
+        expectedPoints.add(new PointsAfterSpending(UNILEVER, -300));
+        expectedPoints.add(new PointsAfterSpending(MILLER_COORS, -100));
+
+        List<PointsAfterSpending> actualPointsList = pointsManager.spendPoints(500);
+        assertThat(actualPointsList, contains(expectedPoints.toArray()));
+
+        Map<String, Integer> payersPointBalance = pointsManager.getPayersPointBalance();
+        assertThat(payersPointBalance.size(), is(3));
+        assertThat(payersPointBalance.get(UNILEVER), is(0));
+        assertThat(payersPointBalance.get(DANNON), is(300));
+        assertThat(payersPointBalance.get(MILLER_COORS), is(9900));
+
+        // spend again
+        expectedPoints.clear();
+        expectedPoints.add(new PointsAfterSpending(MILLER_COORS, -9900));
+
+        actualPointsList = pointsManager.spendPoints(9900);
+        assertThat(actualPointsList, contains(expectedPoints.toArray()));
+        payersPointBalance = pointsManager.getPayersPointBalance();
+        assertThat(payersPointBalance.size(), is(3));
+        assertThat(payersPointBalance.get(DANNON), is(300));
+        assertThat(payersPointBalance.get(UNILEVER), is(0));
+        assertThat(payersPointBalance.get(MILLER_COORS), is(0));
+
+        // spend again
+        expectedPoints.clear();
+        expectedPoints.add(new PointsAfterSpending(DANNON, -300));
+
+        actualPointsList = pointsManager.spendPoints(300);
+        assertThat(actualPointsList, contains(expectedPoints.toArray()));
+        payersPointBalance = pointsManager.getPayersPointBalance();
+        assertThat(payersPointBalance.size(), is(3));
+        assertThat(payersPointBalance.get(DANNON), is(0));
+        assertThat(payersPointBalance.get(UNILEVER), is(0));
+        assertThat(payersPointBalance.get(MILLER_COORS), is(0));
+    }
+
+    @Test
     void exceedAvailablePoints() {
         spendAndAssert(20000);
     }
@@ -130,8 +296,9 @@ class PointsManagerTest {
 
     @Test
     void getPayersPointBalanceNoTransactions() {
-//        Map<String, Integer> actualPayersPointBalance = pointsManager.getPayersPointBalance(Collections.emptyList());
-//        assertThat(actualPayersPointBalance.isEmpty(), is(true));
+        pointsManager.getTransactions().clear();
+        Map<String, Integer> actualPayersPointBalance = pointsManager.getPayersPointBalance();
+        assertThat(actualPayersPointBalance.isEmpty(), is(true));
     }
 
 }

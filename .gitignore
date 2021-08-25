@@ -3,12 +3,19 @@
 
 # Log file
 *.log
+dependency-reduced-pom.xml
 
 # BlueJ files
 *.ctxt
 
+# mac files
+src/main/.DS_Store
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+target
+.idea/
+*.iml
 
 # Package Files #
 *.jar

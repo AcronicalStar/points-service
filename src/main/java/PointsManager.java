@@ -1,7 +1,7 @@
 package main.java;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;
@@ -12,22 +12,25 @@ import static java.util.stream.Collectors.summingInt;
 public class PointsManager {
     private final List<Transaction> transactions = new ArrayList<>();
 
+    /**
+     * This method adds the specified transaction to the list of transactions
+     * @param transaction - contains payer, points, and timestamp and is added to the list of transactions
+     */
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
     /**
-     * This method returns a list of points after spending
-     * @param points points to spend
-     * @return list of points after spending
+     * This method returns a list of points by payer after spending the specified points
+     * @param points The points to spend
+     * @return List of points by payer after spending the specified points
      */
     public List<PointsAfterSpending> spendPoints(int points) {
-        // Count total points and check to make sure it doesn't exceed points to spend
-        int totalPoints = transactions.stream().map(t -> t.getPoints()).reduce(0, Integer::sum);
-
-        if (points > totalPoints) {
-            throw new IllegalArgumentException("Points to spend has exceeded available points");
-        }
+        validateExceededPoints(points);
 
         // Sorts the transaction list by timestamp
         Collections.sort(transactions, new Comparator<Transaction>() {
@@ -37,70 +40,90 @@ public class PointsManager {
             }
         });
 
+        List<Transaction> positiveTransactions = getPositiveTransactions();
+
         List<PointsAfterSpending> pointsAfterSpendingList = new ArrayList<>();
 
-        for (Transaction transaction : transactions) {
-            if (points > 0) {
-                // Gets the points remaining after spending the points associated with the current transaction
-                int pointsAfterSpending = getPayerPoints(transaction.getPayer()) - transaction.getPoints();
-                // Checks to see if payer points is not negative
-                if (pointsAfterSpending >= 0) {
-                    // If the current transaction's points is greater than the points to spend...
-                    if (transaction.getPoints() > points) {
-                        // add the amount of points spent
-                        pointsAfterSpendingList.add(new PointsAfterSpending(transaction.getPayer(), -points));
-                        // Subtract points from the current transaction's points
-                        transaction.setPoints(transaction.getPoints() - points);
-                        break;
-                    } else {
-                        Optional<PointsAfterSpending> optionalPoints = pointsAfterSpendingList
-                                .stream()
-                                // Filters by payer
-                                .filter(p -> Objects.equals(p.getPayer(), transaction.getPayer()))
-                                .findAny();
-                        if (optionalPoints.isEmpty()) {
-                            // If the payer doesn't exist, add the payer along with the points spent
-                            pointsAfterSpendingList.add(new PointsAfterSpending(transaction.getPayer(), -transaction.getPoints()));
-                        } else {
-                            // Otherwise subtract the existing payer
-                            PointsAfterSpending existingPayerPointsAfterSpending = optionalPoints.get();
+        for (int i = 0; i < positiveTransactions.size() && points > 0; i++) {
+            Transaction transaction = positiveTransactions.get(i);
 
-                            // Subtract the transaction's points from the payer points after spending
-                            existingPayerPointsAfterSpending.setPoints(existingPayerPointsAfterSpending.getPoints() - transaction.getPoints());
-                        }
-                        points -= transaction.getPoints();
-                        transaction.setPoints(0);
-                    }
-                }
-            } else {
-                break;
+            // Check to see if the payer is present in the list of points after spending. If it's not then add the payer
+            // with a starting value of zero
+            Optional<PointsAfterSpending> optionalPointsAfterSpending = pointsAfterSpendingList.stream().filter(t -> t.getPayer().equals(transaction.getPayer())).findAny();
+            if (optionalPointsAfterSpending.isEmpty()) {
+                pointsAfterSpendingList.add(new PointsAfterSpending(transaction.getPayer(), 0));
             }
+
+            // Find the min between the points to spend and the points for the current transaction and subtract
+            // the min from points to spend
+
+            int minPoints = 0;
+
+            if (transaction.getPoints() > points) {
+                minPoints = points;
+                transaction.setPoints(transaction.getPoints() - points);
+                points = 0;
+            } else {
+                minPoints = transaction.getPoints();
+                points -= transaction.getPoints();
+                transaction.setPoints(0);
+            }
+
+            // Subtract the min points from the current transactions points
+            int finalMinPoints = minPoints;
+            pointsAfterSpendingList.stream().filter(t -> t.getPayer().equals(transaction.getPayer())).findAny().ifPresent(t -> t.setPoints(t.getPoints() - finalMinPoints));
         }
+
         return pointsAfterSpendingList;
     }
 
+    private void validateExceededPoints(int points) {
+        // Count total points and check to make sure it doesn't exceed points to spend
+        int totalPoints = transactions.stream().map(t -> t.getPoints()).reduce(0, Integer::sum);
+
+        if (points > totalPoints) {
+            throw new IllegalArgumentException("Points to spend has exceeded available points");
+        }
+    }
+
     /**
-     * This method gets points for the specified payer
-     * @param payer the payer to get the points for
-     * @return - payer points
+     * This method returns a list of positive transactions
+     * @return List of positive transactions
      */
-    private int getPayerPoints(String payer) {
-        AtomicInteger result = new AtomicInteger();
+    private List<Transaction> getPositiveTransactions() {
+        // Creates a list with only positive transactions
+        List<Transaction> positiveTransactions = new ArrayList<>();
 
-        transactions
-                .stream()
-                // filter by payer
-                .filter(transaction -> transaction.getPayer().equals(payer))
-                // for each payer atomically increase the points
-                // Note: atomic integer is necessary for thread safety
-                .forEach(transaction -> result.addAndGet(transaction.getPoints()));
+        for (Transaction transaction : transactions) {
+            // If the number of points is positive then add the transaction to the list of positive transactions
+            if (transaction.getPoints() > 0) {
+                positiveTransactions.add(transaction);
+            } else if (transaction.getPoints() < 0) {
+                // Turn points to positive points
+                int absPoints = -transaction.getPoints();
 
-        return result.get();
+                // Filter out payer transactions associated with the negative points and add them to a list
+                List<Transaction> currentPayerTransactions = positiveTransactions.stream().filter(t -> t.getPayer().equals(transaction.getPayer())).collect(Collectors.toList());
+
+                for (int i = 0; i < currentPayerTransactions.size() && absPoints > 0; i++) {
+                    // Find the minimum between the current transaction points and absPoints and subtract from absPoints
+                    int minPoints = Math.min(absPoints, currentPayerTransactions.get(i).getPoints());
+                    absPoints -= minPoints;
+
+                    // Subtract the minimum points from the current transaction's points
+                    currentPayerTransactions.get(i).setPoints(currentPayerTransactions.get(i).getPoints() - minPoints);
+
+                    // Add them back to the negative points
+                    transaction.setPoints(transaction.getPoints() + minPoints);
+                }
+            }
+        }
+        return positiveTransactions;
     }
 
     /**
      * This method returns a map of balances by payer when given a list of transactions
-     * @return map of balances by payer
+     * @return Map of balances by payer
      */
     public Map<String, Integer> getPayersPointBalance() {
         return transactions

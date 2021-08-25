@@ -1,7 +1,7 @@
-package main.java;//import javax.xml.bind.annotation.XmlRootElement;
-import com.fasterxml.jackson.annotation.JsonCreator;
+package main.java;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * The Transaction class is a JavaBean that represents transactions. Each transaction contains a payer, points, and timestamp for the transaction.
@@ -43,6 +43,19 @@ public class Transaction {
 
     public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return points == that.points && payer.equals(that.payer) && timestamp.equals(that.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(payer, points, timestamp);
     }
 
     @Override

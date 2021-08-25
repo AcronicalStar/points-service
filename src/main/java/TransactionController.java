@@ -13,7 +13,6 @@ import java.util.*;
 @RestController
 public class TransactionController {
 
-//    private static final List<Transaction> transactions = new ArrayList<>();
     private final PointsManager pointsManager = new PointsManager();
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
