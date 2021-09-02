@@ -6,11 +6,11 @@ import java.util.Objects;
  * The PointsAfterSpending class is a JavaBean that contains the payer and points. It is used to store the number of
  * points left after the spendPoints endpoint is called.
  */
-public class PointsAfterSpending {
+public class PointsSpentByPayer {
     private String payer;
     private int points;
 
-    public PointsAfterSpending(String payer, int points) {
+    public PointsSpentByPayer(String payer, int points) {
         this.payer = payer;
         this.points = points;
     }
@@ -19,7 +19,7 @@ public class PointsAfterSpending {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PointsAfterSpending pointsAfterSpending = (PointsAfterSpending) o;
+        PointsSpentByPayer pointsAfterSpending = (PointsSpentByPayer) o;
         return points == pointsAfterSpending.points && payer.equals(pointsAfterSpending.payer);
     }
 

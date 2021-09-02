@@ -30,13 +30,13 @@ public class TransactionController {
         pointsManager.addTransaction(transaction);
     }
 
-    @PostMapping(value = "/spendPoints")
-    public List<PointsAfterSpending> spendPoints(@RequestBody Points points) {
+    @PostMapping(value = "/spend-points")
+    public List<PointsSpentByPayer> spendPoints(@RequestBody Points points) {
         logger.info("Spent points: {}", points);
         return pointsManager.spendPoints(points.getPoints());
     }
 
-    @GetMapping(value = "/getBalance")
+    @GetMapping(value = "/get-balance")
     public Map<String, Integer> getBalance() {
         logger.info("Getting balance.");
         return pointsManager.getPayersPointBalance();
