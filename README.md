@@ -1,4 +1,4 @@
-# Points Service
+# Loyalty Rewards Service
 
 # General Info 
 This is a Points web service that accepts HTTP requests and returns responses. This web service provides routes that allow users to: 
