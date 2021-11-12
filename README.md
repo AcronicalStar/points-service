@@ -1,7 +1,7 @@
 # Loyalty Rewards Service
 
 # General Info 
-This is a Points web service that accepts HTTP requests and returns responses. This web service provides routes that allow users to: 
+This is a loyalty rewards web service that accepts HTTP requests and returns responses. This web service provides routes that allow users to: 
 * Add transactions for a specific payer and date
 * Spend points and return a list of { "payer": <string>, "points": <integer> } for each call
 * Return all payer point balances.
