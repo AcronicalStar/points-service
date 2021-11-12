@@ -2,7 +2,7 @@
 
 # General Info 
 This is a loyalty rewards web service that accepts HTTP requests and returns responses. This web service provides routes that allow users to: 
-* Add transactions for a specific payer and date
+* Add transactions for a specific payer/brand and date
 * Spend points and return a list of { "payer": <string>, "points": <integer> } for each call
 * Return all payer point balances.
   
@@ -45,15 +45,15 @@ To add a new transaction:
  * Select POST for method type
  * Type in http://localhost:8080/add
  * Select JSON for data type
- * In the body type: { "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
+ * In the body type: { "payer": "NARS", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
  * Click send
 
 Additional data:
-* { "payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
-* { "payer": "UNILEVER", "points": 200, "timestamp": "2020-10-31T11:00:00Z" }
-* { "payer": "DANNON", "points": -200, "timestamp": "2020-10-31T15:00:00Z" }
-* { "payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z" }
-* { "payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z" }
+* { "payer": "GUERLAIN", "points": 1000, "timestamp": "2020-11-02T14:00:00Z" }
+* { "payer": "NARS", "points": 200, "timestamp": "2020-10-31T11:00:00Z" }
+* { "payer": "NARS", "points": -200, "timestamp": "2020-10-31T15:00:00Z" }
+* { "payer": "YSL", "points": 10000, "timestamp": "2020-11-01T14:00:00Z" }
+* { "payer": "GUERLAIN", "points": 300, "timestamp": "2020-10-31T10:00:00Z" }
 
 To spend points:
 * Select POST for method type
