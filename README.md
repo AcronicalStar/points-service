@@ -27,7 +27,7 @@ This is a loyalty rewards web service that accepts HTTP requests and returns res
   6) Maven
 
 # Setup
-* git clone https://github.com/monicasuresh45/points-service.git
+* git clone https://github.com/AcronicalStar/points-service.git
 * Open up a shell of your choice
 * Install maven: this link has clear instructions for each OS - https://maven.apache.org/install.html
 * Make sure to have maven in your path: Type mvn -v
