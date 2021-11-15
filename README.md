@@ -57,13 +57,13 @@ Additional data:
 
 To spend points:
 * Select POST for method type
-* Type in http://localhost:8080/spendPoints for. URL
+* Type in http://localhost:8080/spend-points for. URL
 * Select JSON. for data type
 * In the body type. { "points": 5000 }
   
 To get balance:
 * Select GET for method type
-* Type http://localhost:8080/getBalance
+* Type http://localhost:8080/get-balance
 
 # Features
 * Main
