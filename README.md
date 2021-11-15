@@ -39,7 +39,7 @@ This is a loyalty rewards web service that accepts HTTP requests and returns res
 * Create collection
 * Add request
 * Label your request so you. can save it for more requests
-* Test all the api's, just as supplied in the exercise
+* Test all the api's
   
 To add a new transaction:
  * Select POST for method type
